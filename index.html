@@ -1,65 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Maxelpay Mini App</title>
     <style>
-      body {
-        --bg-color: var(--tg-theme-bg-color);
-        font: 12px/18px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica,
-          Verdana, sans-serif;
-        background-color: var(--bg-color);
-        color: var(--tg-theme-text-color);
-        margin: 48px 24px;
-        padding: 0;
-        color-scheme: var(--tg-color-scheme);
-      }
+        body {
+            --bg-color: var(--tg-theme-bg-color);
+            font: 12px/18px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--tg-theme-text-color);
+            margin: 48px 24px;
+            padding: 0;
+            color-scheme: var(--tg-color-scheme);
+        }
 
-      a {
-        color: var(--tg-theme-link-color);
-      }
+        a {
+            color: var(--tg-theme-link-color);
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <main>
-      <h1>Start Transaction</h1>
-      <button onclick="startTransaction();">Start</button>
+        <h1>Start Transaction</h1>
+        <button onclick="startTransaction();">Start</button>
     </main>
-
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-      Telegram.WebApp.ready();
-
-      function startTransaction() {
-        const botUsername = "@maxelpayment_bot";
-
-        const payload = {
-          orderID: Math.floor(Math.random() * 1000000000).toString(),
-          amount: "0.001",
-          currency: "USD",
-          timestamp: Math.floor(Date.now() / 1000).toString(),
-          userName: "ABC",
-          siteName: "Maxelpay",
-          userEmail: "abc@gmail.com",
-          redirectUrl:
-            "https://example.com/checkout/order-received/113099/?key=order_IRZTHBRCp3pcg",
-          websiteUrl: "https://example.com",
-          cancelUrl:
-            "https://example.com/cancel/cart-2/?cancel_order=true&order=order_IRZTHBRCp3pcg&order_id=113099&redirect=113099&_wpnonce=e1f09d926a",
-          webhookUrl: "https://example.com/wp-json/maxelpay/api/order_status",
-        };
-
-        const base64Payload = btoa(JSON.stringify(payload));
-        const userId = Telegram.WebApp.initDataUnsafe.user?.id || "unknown";
-
-        const botLink = `https://t.me/${botUsername}?start=payment_${base64Payload}_user_${userId}`;
-        Telegram.WebApp.openTelegramLink(botLink);
-      }
+        Telegram.WebApp.ready();
+        
+        function startTransaction() {
+            let amount = 10; // Set the amount dynamically if needed
+            let botUsername = "@maxelpayment_bot"; // Replace with your bot's username
+            let userId = Telegram.WebApp.initDataUnsafe.user?.id || "unknown";
+            
+            let url = `https://t.me/${botUsername}?start=amount_${amount}_user_${userId}`;
+            Telegram.WebApp.openTelegramLink(url);
+        }
     </script>
-  </body>
+</body>
 </html>
