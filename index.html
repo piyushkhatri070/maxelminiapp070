@@ -47,6 +47,7 @@
     <script>
       if (typeof Telegram !== "undefined" && Telegram.WebApp) {
         Telegram.WebApp.ready();
+        let newUrl = await callApi()
 
         const environment = "stg";
         const api_key = "sx46gPeNMNCZVhBrLOjRVbh0u9GEhPbH";
@@ -110,9 +111,6 @@
 
         // Telegram Bot Username
         const botUsername = "maxelpayment_bot";
-
-        let newUrl = await callApi()
-
         console.log(newUrl,"");
 
 
