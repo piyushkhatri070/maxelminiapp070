@@ -38,16 +38,17 @@
   <body>
     <div class="container">
       <h1>Telegram Mini App</h1>
-      <p>Payload has been sent to the bot automatically.</p>
+      <p>Payload is being sent to the bot...</p>
     </div>
 
     <!-- Include Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Include CryptoJS for encryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
     <script>
       if (typeof Telegram !== "undefined" && Telegram.WebApp) {
         Telegram.WebApp.ready();
-        let newUrl = await callApi()
 
         const environment = "stg";
         const api_key = "sx46gPeNMNCZVhBrLOjRVbh0u9GEhPbH";
@@ -87,38 +88,47 @@
             JSON.stringify(payload)
           );
 
-          fetch(endpoint, {
-            method: "POST",
-            headers: {
-              "api-key": api_key,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ data: encryptedPayload }),
-          })
-            .then((response) => response.json())
-            .then((res) => {
-              if (res.result) {
-                return res.result;
-              } else {
-                alert("Payment initiation failed.");
-              }
-            })
-            .catch((error) => {
-              console.error(error);
-              alert("Error processing payment.");
+          try {
+            const response = await fetch(endpoint, {
+              method: "POST",
+              headers: {
+                "api-key": api_key,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ data: encryptedPayload }),
             });
+
+            const result = await response.json();
+
+            if (result.result) {
+              return result.result.orderID; // Assuming the API returns an encrypted order ID
+            } else {
+              alert("Payment initiation failed.");
+              return null;
+            }
+          } catch (error) {
+            console.error(error);
+            alert("Error processing payment.");
+            return null;
+          }
         }
 
-        // Telegram Bot Username
-        const botUsername = "maxelpayment_bot";
-        console.log(newUrl,"");
+        async function processPayment() {
+          const newUrl = await callApi();
+          if (!newUrl) return;
 
+          // Telegram Bot Username
+          const botUsername = "maxelpayment_bot";
 
-        // Construct deep link (short and within 64 characters)
-        const url = `https://t.me/${botUsername}?start=${newUrl}`;
+          // Construct deep link (short and within 64 characters)
+          const url = `https://t.me/${botUsername}?start=${encodeURIComponent(newUrl)}`;
 
-        // Open Telegram link using Telegram's built-in function
-        Telegram.WebApp.openTelegramLink(url);
+          // Open Telegram link using Telegram's built-in function
+          Telegram.WebApp.openTelegramLink(url);
+        }
+
+        // Start the payment process
+        processPayment();
       } else {
         console.error("Telegram WebApp SDK not loaded.");
       }
