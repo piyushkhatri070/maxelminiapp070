@@ -38,8 +38,7 @@
   <body>
     <div class="container">
       <h1>Telegram Mini App</h1>
-      <p>Click the button below to send data to the bot.</p>
-      <button id="sendDataButton">Send Data</button>
+      <p>Payload has been sent to the bot automatically.</p>
     </div>
 
     <!-- Include Telegram WebApp SDK -->
@@ -51,41 +50,35 @@
         // Initialize Telegram WebApp
         Telegram.WebApp.ready();
 
-        // Get the button element
-        const sendDataButton = document.getElementById("sendDataButton");
+        // Prepare the payload
+        let payload = {
+          orderID: Math.floor(Math.random() * 1000000000).toString(),
+          amount: "0.001",
+          currency: "USD",
+          timestamp: Math.floor(Date.now() / 1000).toString(),
+          userName: "ABC",
+          siteName: "Maxelpay",
+          userEmail: "abc@gmail.com",
+          redirectUrl:
+            "https://example.com/checkout/order-received/113099/?key=order_IRZTHBRCp3pcg",
+          websiteUrl: "https://example.com",
+          cancelUrl:
+            "https://example.com/cancel/cart-2/?cancel_order=true&order=order_IRZTHBRCp3pcg&order_id=113099&redirect=113099&_wpnonce=e1f09d926a",
+          webhookUrl: "https://example.com/wp-json/maxelpay/api/order_status",
+        };
 
-        // Add click event listener to the button
-        sendDataButton.addEventListener("click", () => {
-          // Prepare the payload
-          let payload = {
-            orderID: Math.floor(Math.random() * 1000000000).toString(),
-            amount: "0.001",
-            currency: "USD",
-            timestamp: Math.floor(Date.now() / 1000).toString(),
-            userName: "ABC",
-            siteName: "Maxelpay",
-            userEmail: "abc@gmail.com",
-            redirectUrl:
-              "https://example.com/checkout/order-received/113099/?key=order_IRZTHBRCp3pcg",
-            websiteUrl: "https://example.com",
-            cancelUrl:
-              "https://example.com/cancel/cart-2/?cancel_order=true&order=order_IRZTHBRCp3pcg&order_id=113099&redirect=113099&_wpnonce=e1f09d926a",
-            webhookUrl: "https://example.com/wp-json/maxelpay/api/order_status",
-          };
+        // Convert the payload to a JSON string and encode it
+        const payloadString = JSON.stringify(payload);
+        const encodedPayload = encodeURIComponent(payloadString);
 
-          // Convert the payload to a JSON string and encode it
-          const payloadString = JSON.stringify(payload);
-          const encodedPayload = encodeURIComponent(payloadString);
+        // Define the bot username
+        const botUsername = "maxelpayment_bot";
 
-          // Define the bot username
-          const botUsername = "maxelpayment_bot";
+        // Create the deep link URL
+        const url = `https://t.me/${botUsername}?start=${encodedPayload}`;
 
-          // Create the deep link URL
-          const url = `https://t.me/${botUsername}?start=${encodedPayload}`;
-
-          // Open the URL (this will open Telegram and start the bot with the payload)
-          window.open(url, "_blank");
-        });
+        // Open the URL (this will open Telegram and start the bot with the payload)
+        window.open(url, "_blank");
       } else {
         console.error("Telegram WebApp SDK not loaded.");
       }
