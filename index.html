@@ -43,6 +43,8 @@
         };
 
         let encodedPayload = btoa(JSON.stringify(payload));
+        console.log(encodedPayload);
+        
         let data = "testing";
         let botUsername = "@maxelpayment_bot"; // Replace with your bot's username
         let userId = Telegram.WebApp.initDataUnsafe.user?.id || "unknown";
