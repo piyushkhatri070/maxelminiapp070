@@ -1,59 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Maxelpay Mini App</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini App</title>
     <style>
-      body {
-        --bg-color: var(--tg-theme-bg-color);
-        font: 12px/18px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica,
-          Verdana, sans-serif;
-        background-color: var(--bg-color);
-        color: var(--tg-theme-text-color);
-        margin: 48px 24px;
-        padding: 0;
-        color-scheme: var(--tg-color-scheme);
-      }
-
-      a {
-        color: var(--tg-theme-link-color);
-      }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
-  </head>
-  <body>
-    <main>
-      <h1>Start Transaction</h1>
-      <button onclick="startTransaction();">Start</button>
-    </main>
+</head>
+<body>
+    <div class="container">
+        <h1>Telegram Mini App</h1>
+        <p>Click the button below to send data to the bot.</p>
+        <button id="sendDataButton">Send Data</button>
+    </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-      Telegram.WebApp.ready();
+        // Initialize Telegram WebApp
+        Telegram.WebApp.ready();
 
-      function startTransaction() {
-        let payload = {
-          orderID: Math.floor(Math.random() * 1000000000).toString(),
-          amount: 10,
-          currency: "USD",
-        };
+        // Get the button element
+        const sendDataButton = document.getElementById('sendDataButton');
 
-        // Encode payload as base64
-        let encodedPayload = btoa(JSON.stringify(payload));
+        // Add click event listener to the button
+        sendDataButton.addEventListener('click', () => {
+            // Prepare the payload
+            let payload = {
+                orderID: Math.floor(Math.random() * 1000000000).toString(),
+                amount: "0.001",
+                currency: "USD",
+                timestamp: Math.floor(Date.now() / 1000).toString(),
+                userName: "ABC",
+                siteName: "Maxelpay",
+                userEmail: "abc@gmail.com",
+                redirectUrl: "https://example.com/checkout/order-received/113099/?key=order_IRZTHBRCp3pcg",
+                websiteUrl: "https://example.com",
+                cancelUrl: "https://example.com/cancel/cart-2/?cancel_order=true&order=order_IRZTHBRCp3pcg&order_id=113099&redirect=113099&_wpnonce=e1f09d926a",
+                webhookUrl: "https://example.com/wp-json/maxelpay/api/order_status",
+            };
 
-        let botUsername = "@maxelpayment_bot"; // Replace with your bot's username
-        let userId = Telegram.WebApp.initDataUnsafe?.user?.id || "unknown";
+            // Convert the payload to a JSON string
+            let payloadString = JSON.stringify(payload);
 
-        // Generate the Telegram bot link
-        let url = `https://t.me/${botUsername}?start=data_${encodedPayload}`;
+            // Send the payload to the bot
+            Telegram.WebApp.sendData(payloadString);
 
-        // Open Telegram bot link
-        Telegram.WebApp.openTelegramLink(url);
-      }
+            // Optionally, close the Mini App after sending data
+            Telegram.WebApp.close();
+        });
     </script>
-  </body>
+</body>
 </html>
