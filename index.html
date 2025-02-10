@@ -42,8 +42,6 @@
       <button id="sendDataButton">Send Data</button>
     </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <script>
       // Initialize Telegram WebApp
       Telegram.WebApp.ready();
@@ -70,14 +68,18 @@
           webhookUrl: "https://example.com/wp-json/maxelpay/api/order_status",
         };
 
-        // Convert the payload to a JSON string
-        let payloadString = JSON.stringify(payload);
+        // Convert the payload to a JSON string and encode it
+        const payloadString = JSON.stringify(payload);
+        const encodedPayload = encodeURIComponent(payloadString);
 
-        // Send the payload to the bot
-        Telegram.WebApp.sendData(payloadString);
+        // Define the bot username
+        const botUsername = "maxelpayment_bot";
 
-        // Optionally, close the Mini App after sending data
-        Telegram.WebApp.close();
+        // Create the deep link URL
+        const url = `https://t.me/${botUsername}?start=${encodedPayload}`;
+
+        // Open the URL (this will open Telegram and start the bot with the payload)
+        window.open(url, "_blank");
       });
     </script>
   </body>
