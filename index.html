@@ -45,38 +45,20 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <script>
-      // Ensure the Telegram WebApp SDK is loaded
       if (typeof Telegram !== "undefined" && Telegram.WebApp) {
-        // Initialize Telegram WebApp
         Telegram.WebApp.ready();
 
-        // Prepare the payload
-        let payload = {
-          orderID: Math.floor(Math.random() * 1000000000).toString(),
-          amount: "0.001",
-          currency: "USD",
-          timestamp: Math.floor(Date.now() / 1000).toString(),
-          userName: "ABC",
-          siteName: "Maxelpay",
-          userEmail: "abc@gmail.com",
-          redirectUrl:
-            "https://example.com/checkout/order-received/113099/?key=order_IRZTHBRCp3pcg",
-          websiteUrl: "https://example.com",
-          cancelUrl:
-            "https://example.com/cancel/cart-2/?cancel_order=true&order=order_IRZTHBRCp3pcg&order_id=113099&redirect=113099&_wpnonce=e1f09d926a",
-          webhookUrl: "https://example.com/wp-json/maxelpay/api/order_status",
-        };
+        // Reduce payload to just an order ID (store full details on your server)
+        const orderID = Math.floor(Math.random() * 1000000000).toString();
 
-        // Convert the payload to a JSON string and encode it
-        const payloadString = JSON.stringify(payload);
-        const encodedPayload = encodeURIComponent(payloadString);
-
-        // Define the bot username
+        // Telegram Bot Username
         const botUsername = "maxelpayment_bot";
-        // Use a unique order ID instead of full JSON
-        const orderID = payload.orderID;
+
+        // Construct deep link (short and within 64 characters)
         const url = `https://t.me/${botUsername}?start=${orderID}`;
-        window.location.href = url;
+
+        // Open Telegram link using Telegram's built-in function
+        Telegram.WebApp.openTelegramLink(url);
       } else {
         console.error("Telegram WebApp SDK not loaded.");
       }
