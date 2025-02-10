@@ -50,14 +50,11 @@
           webhookUrl: "https://example.com/api/webhook",
         };
 
-        let botUsername = "maxelpayment_bot"; // Remove "@" from the username
         let encodedPayload = btoa(JSON.stringify(payload));
+        let botUsername = "@maxelpayment_bot"; // Replace with your bot's username
+        let userId = Telegram.WebApp.initDataUnsafe.user?.id || "unknown";
 
-        console.log("Encoded Payload Sent:", encodedPayload); // Debug log
-
-        let url = `https://t.me/${botUsername}?start=${encodedPayload}`;
-
-        // Open Telegram link
+        let url = `https://t.me/${botUsername}?start=encodedPayload_${encodedPayload}_user_${userId}`;
         Telegram.WebApp.openTelegramLink(url);
       }
     </script>
