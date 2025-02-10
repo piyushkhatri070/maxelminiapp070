@@ -47,7 +47,7 @@
         let botUsername = "@maxelpayment_bot"; // Replace with your bot's username
         let userId = Telegram.WebApp.initDataUnsafe.user?.id || "unknown";
 
-        let url = `https://t.me/${botUsername}?start=encodedata_${encodedPayload}_user_${userId}`;
+        let url = `https://t.me/${botUsername}?start=encodedata_${data}_user_${userId}`;
         Telegram.WebApp.openTelegramLink(url);
       }
     </script>
