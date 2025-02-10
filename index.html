@@ -42,12 +42,16 @@
           currency: "USD",
         };
 
+        // Encode payload as base64
         let encodedPayload = btoa(JSON.stringify(payload));
-        let data = "testing";
-        let botUsername = "@maxelpayment_bot";
-        let userId = Telegram.WebApp.initDataUnsafe.user?.id || "unknown";
 
-        let url = `https://t.me/${botUsername}?start=data_${data}`;
+        let botUsername = "@maxelpayment_bot"; // Replace with your bot's username
+        let userId = Telegram.WebApp.initDataUnsafe?.user?.id || "unknown";
+
+        // Generate the Telegram bot link
+        let url = `https://t.me/${botUsername}?start=data_${encodedPayload}`;
+
+        // Open Telegram bot link
         Telegram.WebApp.openTelegramLink(url);
       }
     </script>
