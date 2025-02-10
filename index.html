@@ -36,25 +36,26 @@
       Telegram.WebApp.ready();
 
       function startTransaction() {
-        // let payload = {
-        //   orderID: Math.floor(Math.random() * 1000000000).toString(),
-        //   amount: 10,
-        //   currency: "USD",
-        //   timestamp: Math.floor(Date.now() / 1000).toString(),
-        //   userName: "JohnDoe",
-        //   siteName: "Maxelpay",
-        //   userEmail: "john.doe@example.com",
-        //   redirectUrl: "https://example.com/checkout/success",
-        //   websiteUrl: "https://example.com",
-        //   cancelUrl: "https://example.com/checkout/cancel",
-        //   webhookUrl: "https://example.com/api/webhook",
-        // };
+        let payload = {
+          orderID: Math.floor(Math.random() * 1000000000).toString(),
+          amount: 10,
+          currency: "USD",
+          timestamp: Math.floor(Date.now() / 1000).toString(),
+          userName: "JohnDoe",
+          siteName: "Maxelpay",
+          userEmail: "john.doe@example.com",
+          redirectUrl: "https://example.com/checkout/success",
+          websiteUrl: "https://example.com",
+          cancelUrl: "https://example.com/checkout/cancel",
+          webhookUrl: "https://example.com/api/webhook",
+        };
+
+        let encodedPayload = btoa(JSON.stringify(payload));
         let data = "testing";
-        // let encodedPayload = btoa(JSON.stringify(payload));
         let botUsername = "@maxelpayment_bot"; // Replace with your bot's username
         let userId = Telegram.WebApp.initDataUnsafe.user?.id || "unknown";
 
-        let url = `https://t.me/${botUsername}?start=encodedata_${data}_user_${userId}`;
+        let url = `https://t.me/${botUsername}?start=encodedata_${encodedPayload}_user_${userId}`;
         Telegram.WebApp.openTelegramLink(url);
       }
     </script>
