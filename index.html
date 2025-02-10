@@ -15,7 +15,7 @@
             padding: 0;
             color-scheme: var(--tg-color-scheme);
         }
-
+ 
         a {
             color: var(--tg-theme-link-color);
         }
@@ -30,15 +30,31 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         Telegram.WebApp.ready();
-        
+    
         function startTransaction() {
-            let amount = 10; // Set the amount dynamically if needed
-            let botUsername = "@maxelpayment_bot"; // Replace with your bot's username
-            let userId = Telegram.WebApp.initDataUnsafe.user?.id || "unknown";
-            
-            let url = `https://t.me/${botUsername}?start=amount_${amount}_user_${userId}`;
+            let payload = {
+                orderID: Math.floor(Math.random() * 1000000000).toString(),
+                amount: 10,  
+                currency: "USD",
+                timestamp: Math.floor(Date.now() / 1000).toString(),
+                userName: "JohnDoe",
+                siteName: "Maxelpay",
+                userEmail: "john.doe@example.com",
+                redirectUrl: "https://example.com/checkout/success",
+                websiteUrl: "https://example.com",
+                cancelUrl: "https://example.com/checkout/cancel",
+                webhookUrl: "https://example.com/api/webhook",
+            };
+    
+            let botUsername = "@maxelpayment_bot";
+            let encodedPayload = btoa(JSON.stringify(payload));
+            let url = `https://t.me/${botUsername}?start=${encodedPayload}`;
+    
             Telegram.WebApp.openTelegramLink(url);
         }
     </script>
+    
+    
+    
 </body>
 </html>
