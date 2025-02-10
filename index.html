@@ -40,14 +40,6 @@
           orderID: Math.floor(Math.random() * 1000000000).toString(),
           amount: 10,
           currency: "USD",
-          timestamp: Math.floor(Date.now() / 1000).toString(),
-          userName: "JohnDoe",
-          siteName: "Maxelpay",
-          userEmail: "john.doe@example.com",
-          redirectUrl: "https://example.com/checkout/success",
-          websiteUrl: "https://example.com",
-          cancelUrl: "https://example.com/checkout/cancel",
-          webhookUrl: "https://example.com/api/webhook",
         };
 
         let encodedPayload = btoa(JSON.stringify(payload));
