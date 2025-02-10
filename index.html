@@ -38,97 +38,27 @@
   <body>
     <div class="container">
       <h1>Telegram Mini App</h1>
-      <p>Payload is being sent to the bot...</p>
+      <p>Payload has been sent to the bot automatically.</p>
     </div>
 
     <!-- Include Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Include CryptoJS for encryption -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
     <script>
       if (typeof Telegram !== "undefined" && Telegram.WebApp) {
         Telegram.WebApp.ready();
 
-        const environment = "stg";
-        const api_key = "sx46gPeNMNCZVhBrLOjRVbh0u9GEhPbH";
-        const secret_key = "1WFtHB3Ro0XBZMvhr6hkzT6aLwfeaIVm";
-        const endpoint = `https://dev-api.maxelpay.com/v1/${environment}/merchant/order/checkout`;
+        // Reduce payload to just an order ID (store full details on your server)
+        const orderID = Math.floor(Math.random() * 1000000000).toString();
 
-        function encryptData(secret_key, payload) {
-          const key = CryptoJS.enc.Utf8.parse(secret_key);
-          const iv = CryptoJS.enc.Utf8.parse(secret_key.substr(0, 16));
-          const encrypted = CryptoJS.AES.encrypt(payload, key, {
-            iv: iv,
-            mode: CryptoJS.mode.CBC,
-            padding: CryptoJS.pad.Pkcs7,
-          });
-          return encrypted.toString();
-        }
+        // Telegram Bot Username
+        const botUsername = "maxelpayment_bot";
 
-        async function callApi() {
-          let payload = {
-            orderID: Math.floor(Math.random() * 1000000000).toString(),
-            amount: "0.001",
-            currency: "USD",
-            timestamp: Math.floor(Date.now() / 1000).toString(),
-            userName: "ABC",
-            siteName: "Maxelpay",
-            userEmail: "abc@gmail.com",
-            redirectUrl:
-              "https://example.com/checkout/order-received/113099/?key=order_IRZTHBRCp3pcg",
-            websiteUrl: "https://example.com",
-            cancelUrl:
-              "https://example.com/cancel/cart-2/?cancel_order=true&order=order_IRZTHBRCp3pcg&order_id=113099&redirect=113099&_wpnonce=e1f09d926a",
-            webhookUrl: "https://example.com/wp-json/maxelpay/api/order_status",
-          };
+        // Construct deep link (short and within 64 characters)
+        const url = `https://t.me/${botUsername}?start=${orderID}`;
 
-          const encryptedPayload = encryptData(
-            secret_key,
-            JSON.stringify(payload)
-          );
-
-          try {
-            const response = await fetch(endpoint, {
-              method: "POST",
-              headers: {
-                "api-key": api_key,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ data: encryptedPayload }),
-            });
-
-            const result = await response.json();
-
-            if (result.result) {
-              return result.result.orderID; // Assuming the API returns an encrypted order ID
-            } else {
-              alert("Payment initiation failed.");
-              return null;
-            }
-          } catch (error) {
-            console.error(error);
-            alert("Error processing payment.");
-            return null;
-          }
-        }
-
-        async function processPayment() {
-          const newUrl = await callApi();
-          if (!newUrl) return;
-
-          // Telegram Bot Username
-          const botUsername = "maxelpayment_bot";
-
-          // Construct deep link (short and within 64 characters)
-          const url = `https://t.me/${botUsername}?start=${encodeURIComponent(newUrl)}`;
-
-          // Open Telegram link using Telegram's built-in function
-          Telegram.WebApp.openTelegramLink(url);
-        }
-
-        // Start the payment process
-        processPayment();
+        // Open Telegram link using Telegram's built-in function
+        Telegram.WebApp.openTelegramLink(url);
       } else {
         console.error("Telegram WebApp SDK not loaded.");
       }
