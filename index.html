@@ -42,8 +42,6 @@
       <button id="sendDataButton">Send Data</button>
     </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <script>
       // Initialize Telegram WebApp
       Telegram.WebApp.ready();
@@ -80,8 +78,8 @@
         // Create the deep link URL
         const url = `https://t.me/${botUsername}?start=${encodedPayload}`;
 
-        // Open Telegram link
-        Telegram.WebApp.openTelegramLink(url);
+        // Open the URL (this will open Telegram and start the bot with the payload)
+        window.open(url, "_blank");
       });
     </script>
   </body>
