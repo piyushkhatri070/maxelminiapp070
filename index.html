@@ -43,13 +43,11 @@
         };
 
         let encodedPayload = btoa(JSON.stringify(payload));
-        console.log(encodedPayload);
-        
         let data = "testing";
-        let botUsername = "@maxelpayment_bot"; // Replace with your bot's username
+        let botUsername = "@maxelpayment_bot";
         let userId = Telegram.WebApp.initDataUnsafe.user?.id || "unknown";
 
-        let url = `https://t.me/${botUsername}?start=encodedata_${data}_user_${userId}`;
+        let url = `https://t.me/${botUsername}?start=test_${encodedPayload}`;
         Telegram.WebApp.openTelegramLink(url);
       }
     </script>
