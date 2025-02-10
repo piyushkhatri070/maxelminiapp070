@@ -49,7 +49,7 @@
         let userId = Telegram.WebApp.initDataUnsafe?.user?.id || "unknown";
 
         // Generate the Telegram bot link
-        let url = `https://t.me/${botUsername}?start=data_${encodedPayload}`;
+        let url = `https://t.me/${botUsername}?start=${encodedPayload}`;
 
         // Open Telegram bot link
         Telegram.WebApp.openTelegramLink(url);
