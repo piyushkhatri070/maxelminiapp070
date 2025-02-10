@@ -1,80 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Telegram Mini App</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            text-align: center;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .container {
+        text-align: center;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>Telegram Mini App</h1>
-        <p>Click the button below to send data to the bot.</p>
-        <button id="sendDataButton">Send Data</button>
+      <h1>Telegram Mini App</h1>
+      <p>Click the button below to send data to the bot.</p>
+      <button id="sendDataButton">Send Data</button>
     </div>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <script>
-        // Initialize Telegram WebApp
-        Telegram.WebApp.ready();
+      // Initialize Telegram WebApp
+      Telegram.WebApp.ready();
 
-        // Get the button element
-        const sendDataButton = document.getElementById('sendDataButton');
+      // Get the button element
+      const sendDataButton = document.getElementById("sendDataButton");
 
-        // Add click event listener to the button
-        sendDataButton.addEventListener('click', () => {
-            // Prepare the payload
-            let payload = {
-                orderID: Math.floor(Math.random() * 1000000000).toString(),
-                amount: "0.001",
-                currency: "USD",
-                timestamp: Math.floor(Date.now() / 1000).toString(),
-                userName: "ABC",
-                siteName: "Maxelpay",
-                userEmail: "abc@gmail.com",
-                redirectUrl: "https://example.com/checkout/order-received/113099/?key=order_IRZTHBRCp3pcg",
-                websiteUrl: "https://example.com",
-                cancelUrl: "https://example.com/cancel/cart-2/?cancel_order=true&order=order_IRZTHBRCp3pcg&order_id=113099&redirect=113099&_wpnonce=e1f09d926a",
-                webhookUrl: "https://example.com/wp-json/maxelpay/api/order_status",
-            };
+      // Add click event listener to the button
+      sendDataButton.addEventListener("click", () => {
+        // Prepare the payload
+        let payload = {
+          orderID: Math.floor(Math.random() * 1000000000).toString(),
+          amount: "0.001",
+          currency: "USD",
+          timestamp: Math.floor(Date.now() / 1000).toString(),
+          userName: "ABC",
+          siteName: "Maxelpay",
+          userEmail: "abc@gmail.com",
+          redirectUrl:
+            "https://example.com/checkout/order-received/113099/?key=order_IRZTHBRCp3pcg",
+          websiteUrl: "https://example.com",
+          cancelUrl:
+            "https://example.com/cancel/cart-2/?cancel_order=true&order=order_IRZTHBRCp3pcg&order_id=113099&redirect=113099&_wpnonce=e1f09d926a",
+          webhookUrl: "https://example.com/wp-json/maxelpay/api/order_status",
+        };
 
-            // Convert the payload to a JSON string
-            let payloadString = JSON.stringify(payload);
+        // Convert the payload to a JSON string
+        let payloadString = JSON.stringify(payload);
 
-            // Send the payload to the bot
-            Telegram.WebApp.sendData(payloadString);
+        // Send the payload to the bot
+        Telegram.WebApp.sendData(payloadString);
 
-            // Optionally, close the Mini App after sending data
-            Telegram.WebApp.close();
-        });
+        // Optionally, close the Mini App after sending data
+        Telegram.WebApp.close();
+      });
     </script>
-</body>
+  </body>
 </html>
