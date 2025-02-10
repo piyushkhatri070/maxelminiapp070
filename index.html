@@ -73,12 +73,10 @@
 
         // Define the bot username
         const botUsername = "maxelpayment_bot";
-
-        // Create the deep link URL
-        const url = `https://t.me/${botUsername}?start=${encodedPayload}`;
-
-        // Open the URL (this will open Telegram and start the bot with the payload)
-        window.open(url, "_blank");
+        // Use a unique order ID instead of full JSON
+        const orderID = payload.orderID;
+        const url = `https://t.me/${botUsername}?start=${orderID}`;
+        window.location.href = url;
       } else {
         console.error("Telegram WebApp SDK not loaded.");
       }
