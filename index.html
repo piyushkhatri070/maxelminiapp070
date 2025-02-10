@@ -113,6 +113,9 @@
 
         let newUrl = await callApi()
 
+        console.log(newUrl,"");
+
+
         // Construct deep link (short and within 64 characters)
         const url = `https://t.me/${botUsername}?start=${newUrl}`;
 
