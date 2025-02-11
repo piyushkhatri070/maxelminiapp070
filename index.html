@@ -16,16 +16,15 @@
     <script>
       Telegram.WebApp.ready();
 
-      const API_ENDPOINT =
-        "https://dev-api.maxelpay.com/v1/stg/merchant/order/checkout";
+      const API_ENDPOINT = "https://dev-api.maxelpay.com/v1/stg/merchant/order/checkout";
       const API_KEY = "sx46gPeNMNCZVhBrLOjRVbh0u9GEhPbH";
       const SECRET_KEY = "1WFtHB3Ro0XBZMvhr6hkzT6aLwfeaIVm";
 
-      function encryptData(secret_key, payload) {
-        const key = CryptoJS.enc.Utf8.parse(secret_key);
-        const ivHex = CryptoJS.enc.Utf8.parse(secret_key.substr(0, 16));
+      function encryptData(secretKey, payload) {
+        const key = CryptoJS.enc.Utf8.parse(secretKey);
+        const iv = CryptoJS.enc.Utf8.parse(secretKey.substring(0, 16));
         const encrypted = CryptoJS.AES.encrypt(payload, key, {
-          iv: ivHex,
+          iv: iv,
           mode: CryptoJS.mode.CBC,
           padding: CryptoJS.pad.Pkcs7,
         });
@@ -33,12 +32,8 @@
       }
 
       async function callApi(payload) {
-        const encryptedPayload = encryptData(
-          SECRET_KEY,
-          JSON.stringify(payload)
-        );
-
         try {
+          const encryptedPayload = encryptData(SECRET_KEY, JSON.stringify(payload));
           const response = await fetch(API_ENDPOINT, {
             method: "POST",
             headers: {
@@ -47,14 +42,8 @@
             },
             body: JSON.stringify({ data: encryptedPayload }),
           });
-
           const resData = await response.json();
-          if (resData.result) {
-            return resData.result;
-          } else {
-            console.error("Payment initiation failed:", resData);
-            return null;
-          }
+          return resData.result || null;
         } catch (error) {
           console.error("Error processing payment:", error);
           return null;
@@ -62,7 +51,7 @@
       }
 
       async function startTransaction() {
-        let payload = {
+        const payload = {
           orderID: Math.floor(Math.random() * 1000000000).toString(),
           amount: "10",
           currency: "USD",
@@ -76,25 +65,20 @@
           webhookUrl: "https://example.com/api/webhook",
         };
 
-        let paymentLink = await callApi(payload);
+        const paymentLink = await callApi(payload);
         if (!paymentLink) {
           alert("Failed to generate payment link.");
           return;
         }
 
-        let truncatedLink = paymentLink.replace(/^https?:\/\//, "");
-        let botUsername = "maxelpayment_bot";
+        const botUsername = "maxelpayment_bot";
+        const encodedLink = encodeURIComponent(paymentLink);
+        const telegramUrl = `https://t.me/${botUsername}?start=${encodedLink}`;
 
-        let url = `https://t.me/${botUsername}?start=${encodeURIComponent(truncatedLink)}`;
-        console.log("Generated Telegram URL:", url);
+        console.log("Generated Telegram URL:", telegramUrl);
 
-        try {
-          Telegram.WebApp.openTelegramLink(url);
-        } catch (error) {
-          console.error("Failed to open Telegram link:", error);
-          window.open(url, "_blank");
-          alert("Please open the link manually in Telegram.");
-        }
+        Telegram.WebApp.sendData(paymentLink); // Send payment link to bot
+        Telegram.WebApp.openTelegramLink(telegramUrl); // Open payment link in Telegram
       }
     </script>
   </body>
