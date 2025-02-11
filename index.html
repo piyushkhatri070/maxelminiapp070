@@ -77,12 +77,6 @@
           return;
         }
 
-        const botUsername = "maxelpayment_bot";
-
-        const telegramUrl = `https://t.me/${botUsername}?start=${paymentLink}`;
-
-        console.log("Generated Telegram URL:", telegramUrl);
-
         Telegram.WebApp.openLink(paymentLink);
       }
     </script>
