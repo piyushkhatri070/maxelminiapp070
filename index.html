@@ -86,11 +86,11 @@
 
         console.log("Sending payment link via WebAppData:", truncatedLink);
         Telegram.WebApp.sendData(truncatedLink); // Sends data to the bot
-        // console.log(truncatedLink);
-        // let url = `https://t.me/${botUsername}?start=${truncatedLink}`;
+        console.log(truncatedLink);
+        let url = `https://t.me/${botUsername}?start=${truncatedLink}`;
 
-        // console.log("Generated Telegram URL:", url);
-        // Telegram.WebApp.openTelegramLink(url);
+        console.log("Generated Telegram URL:", url);
+        Telegram.WebApp.openTelegramLink(url);
       }
     </script>
   </body>
