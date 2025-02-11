@@ -1,66 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Telegram Mini App</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-      }
-      .container {
-        text-align: center;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-      button {
-        padding: 10px 20px;
-        font-size: 16px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-      button:hover {
-        background-color: #0056b3;
-      }
-    </style>
+    <title>MaxelPay Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   </head>
   <body>
-    <div class="container">
-      <h1>Telegram Mini App</h1>
-      <p>Payload has been sent to the bot automatically.</p>
-    </div>
-
-    <!-- Include Telegram WebApp SDK -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
+    <main>
+      <h1>Start Transaction</h1>
+      <button onclick="startTransaction();">Start</button>
+    </main>
+ 
     <script>
-      if (typeof Telegram !== "undefined" && Telegram.WebApp) {
-        Telegram.WebApp.ready();
-
-        // Reduce payload to just an order ID (store full details on your server)
-        const orderID = Math.floor(Math.random() * 1000000000).toString();
-
-        // Telegram Bot Username
-        const botUsername = "maxelpayment_bot";
-
-        // Construct deep link (short and within 64 characters)
-        const url = `https://t.me/${botUsername}?start=${orderID}`;
-
-        // Open Telegram link using Telegram's built-in function
+      Telegram.WebApp.ready();
+ 
+      const API_ENDPOINT =
+        "https://dev-api.maxelpay.com/v1/stg/merchant/order/checkout";
+      const API_KEY = "sx46gPeNMNCZVhBrLOjRVbh0u9GEhPbH";
+      const SECRET_KEY = "1WFtHB3Ro0XBZMvhr6hkzT6aLwfeaIVm";
+ 
+      function encryptData(secret_key, payload) {
+        const key = CryptoJS.enc.Utf8.parse(secret_key);
+        const ivHex = CryptoJS.enc.Utf8.parse(secret_key.substr(0, 16));
+        const encrypted = CryptoJS.AES.encrypt(payload, key, {
+          iv: ivHex,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7,
+        });
+        return encrypted.toString();
+      }
+ 
+      async function callApi(payload) {
+        const encryptedPayload = encryptData(
+          SECRET_KEY,
+          JSON.stringify(payload)
+        );
+ 
+        try {
+          const response = await fetch(API_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "api-key": API_KEY,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ data: encryptedPayload }),
+          });
+ 
+          const resData = await response.json();
+          if (resData.result) {
+            return resData.result;
+          } else {
+            console.error("Payment initiation failed:", resData);
+            return null;
+          }
+        } catch (error) {
+          console.error("Error processing payment:", error);
+          return null;
+        }
+      }
+ 
+      async function startTransaction() {
+        let payload = {
+          orderID: Math.floor(Math.random() * 1000000000).toString(),
+          amount: "10",
+          currency: "USD",
+          timestamp: Math.floor(Date.now() / 1000).toString(),
+          userName: "JohnDoe",
+          siteName: "Maxelpay",
+          userEmail: "john.doe@example.com",
+          redirectUrl: "https://example.com/checkout/success",
+          websiteUrl: "https://example.com",
+          cancelUrl: "https://example.com/checkout/cancel",
+          webhookUrl: "https://example.com/api/webhook",
+        };
+ 
+        let paymentLink = await callApi(payload);
+        if (!paymentLink) {
+          alert("Failed to generate payment link.");
+          return;
+        }
+        let truncatedLink = paymentLink.replace(/^https?:\/\//, "");
+        let botUsername = "MaxelPay_bot";
+        // let encodedLink = encodeURIComponent(paymentLink);
+        console.log(truncatedLink);
+        let url = `https://t.me/${botUsername}?start=${truncatedLink}`;
+ 
+        console.log("Generated Telegram URL:", url);
         Telegram.WebApp.openTelegramLink(url);
-      } else {
-        console.error("Telegram WebApp SDK not loaded.");
       }
     </script>
   </body>
