@@ -83,15 +83,8 @@
         }
         let truncatedLink = paymentLink.replace(/^https?:\/\//, "");
         let botUsername = "maxelpayment_bot";
-        let newdata = JSON.stringify(truncatedLink);
 
-        var encrypted = CryptoJS.AES.encrypt(newdata, SECRET_KEY);
-
-        // var decrypted = CryptoJS.AES.decrypt(encrypted, SECRET_KEY);
-
-        console.log("Sending payment link via WebAppData:", encrypted);
-
-        let url = `https://t.me/${botUsername}?start=${newdata}`;
+        let url = `https://t.me/${botUsername}?start=${truncatedLink}`;
 
         console.log("Generated Telegram URL:", url);
         Telegram.WebApp.openTelegramLink(url);
