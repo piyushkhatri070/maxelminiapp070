@@ -12,15 +12,15 @@
       <h1>Start Transaction</h1>
       <button onclick="startTransaction();">Start</button>
     </main>
- 
+
     <script>
       Telegram.WebApp.ready();
- 
+
       const API_ENDPOINT =
         "https://dev-api.maxelpay.com/v1/stg/merchant/order/checkout";
       const API_KEY = "sx46gPeNMNCZVhBrLOjRVbh0u9GEhPbH";
       const SECRET_KEY = "1WFtHB3Ro0XBZMvhr6hkzT6aLwfeaIVm";
- 
+
       function encryptData(secret_key, payload) {
         const key = CryptoJS.enc.Utf8.parse(secret_key);
         const ivHex = CryptoJS.enc.Utf8.parse(secret_key.substr(0, 16));
@@ -31,13 +31,13 @@
         });
         return encrypted.toString();
       }
- 
+
       async function callApi(payload) {
         const encryptedPayload = encryptData(
           SECRET_KEY,
           JSON.stringify(payload)
         );
- 
+
         try {
           const response = await fetch(API_ENDPOINT, {
             method: "POST",
@@ -47,7 +47,7 @@
             },
             body: JSON.stringify({ data: encryptedPayload }),
           });
- 
+
           const resData = await response.json();
           if (resData.result) {
             return resData.result;
@@ -60,7 +60,7 @@
           return null;
         }
       }
- 
+
       async function startTransaction() {
         let payload = {
           orderID: Math.floor(Math.random() * 1000000000).toString(),
@@ -75,7 +75,7 @@
           cancelUrl: "https://example.com/checkout/cancel",
           webhookUrl: "https://example.com/api/webhook",
         };
- 
+
         let paymentLink = await callApi(payload);
         if (!paymentLink) {
           alert("Failed to generate payment link.");
@@ -83,11 +83,14 @@
         }
         let truncatedLink = paymentLink.replace(/^https?:\/\//, "");
         let botUsername = "maxelpayment_bot";
-        console.log(truncatedLink);
-        let url = `https://t.me/${botUsername}?start=${truncatedLink}`;
- 
-        console.log("Generated Telegram URL:", url);
-        Telegram.WebApp.openTelegramLink(url);
+
+        console.log("Sending payment link via WebAppData:", truncatedLink);
+        Telegram.WebApp.sendData(truncatedLink); // Sends data to the bot
+        // console.log(truncatedLink);
+        // let url = `https://t.me/${botUsername}?start=${truncatedLink}`;
+
+        // console.log("Generated Telegram URL:", url);
+        // Telegram.WebApp.openTelegramLink(url);
       }
     </script>
   </body>
