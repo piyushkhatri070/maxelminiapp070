@@ -72,6 +72,9 @@
         };
 
         const paymentLink = await callApi(payload);
+
+        console.log(paymentLink, "paymentLink");
+
         if (!paymentLink) {
           alert("Failed to generate payment link.");
           return;
