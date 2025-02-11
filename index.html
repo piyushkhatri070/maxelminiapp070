@@ -16,6 +16,8 @@
     <script>
       Telegram.WebApp.ready();
 
+      console.log(Telegram);
+
       const API_ENDPOINT =
         "https://dev-api.maxelpay.com/v1/stg/merchant/order/checkout";
       const API_KEY = "sx46gPeNMNCZVhBrLOjRVbh0u9GEhPbH";
@@ -81,8 +83,7 @@
 
         console.log("Generated Telegram URL:", telegramUrl);
 
-        Telegram.WebApp.sendData(paymentLink); // Send payment link to bot
-        Telegram.WebApp.openTelegramLink(telegramUrl); // Open payment link in Telegram
+        Telegram.WebApp.openLink(paymentLink);
       }
     </script>
   </body>
