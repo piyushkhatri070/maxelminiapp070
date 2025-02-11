@@ -81,13 +81,20 @@
           alert("Failed to generate payment link.");
           return;
         }
+
         let truncatedLink = paymentLink.replace(/^https?:\/\//, "");
         let botUsername = "maxelpayment_bot";
 
-        let url = `https://t.me/${botUsername}?start=${truncatedLink}`;
-
+        let url = `https://t.me/${botUsername}?start=${encodeURIComponent(truncatedLink)}`;
         console.log("Generated Telegram URL:", url);
-        Telegram.WebApp.openTelegramLink(url);
+
+        try {
+          Telegram.WebApp.openTelegramLink(url);
+        } catch (error) {
+          console.error("Failed to open Telegram link:", error);
+          window.open(url, "_blank");
+          alert("Please open the link manually in Telegram.");
+        }
       }
     </script>
   </body>
