@@ -16,7 +16,8 @@
     <script>
       Telegram.WebApp.ready();
 
-      const API_ENDPOINT = "https://dev-api.maxelpay.com/v1/stg/merchant/order/checkout";
+      const API_ENDPOINT =
+        "https://dev-api.maxelpay.com/v1/stg/merchant/order/checkout";
       const API_KEY = "sx46gPeNMNCZVhBrLOjRVbh0u9GEhPbH";
       const SECRET_KEY = "1WFtHB3Ro0XBZMvhr6hkzT6aLwfeaIVm";
 
@@ -33,7 +34,10 @@
 
       async function callApi(payload) {
         try {
-          const encryptedPayload = encryptData(SECRET_KEY, JSON.stringify(payload));
+          const encryptedPayload = encryptData(
+            SECRET_KEY,
+            JSON.stringify(payload)
+          );
           const response = await fetch(API_ENDPOINT, {
             method: "POST",
             headers: {
@@ -72,8 +76,8 @@
         }
 
         const botUsername = "maxelpayment_bot";
-        const encodedLink = encodeURIComponent(paymentLink);
-        const telegramUrl = `https://t.me/${botUsername}?start=${encodedLink}`;
+
+        const telegramUrl = `https://t.me/${botUsername}?start=${paymentLink}`;
 
         console.log("Generated Telegram URL:", telegramUrl);
 
